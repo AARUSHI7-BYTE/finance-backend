@@ -1,0 +1,48 @@
+import supabase from "../config/supabase.js";
+
+export const addTransaction = async (req, res) => {
+  const { amount, category_id, type, description, tags } = req.body;
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .insert([
+      {
+        user_id: req.user.id,
+        amount,
+        category_id,
+        type,
+        description,
+        tags,
+      },
+    ]);
+
+  if (error) return res.status(400).json(error);
+
+  res.json(data);
+};
+
+export const getTransactions = async (req, res) => {
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .eq("user_id", req.user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) return res.status(400).json(error);
+
+  res.json(data);
+};
+
+export const deleteTransaction = async (req, res) => {
+  const { id } = req.params;
+
+  const { error } = await supabase
+    .from("transactions")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", req.user.id);
+
+  if (error) return res.status(400).json(error);
+
+  res.json({ message: "Deleted successfully" });
+};
