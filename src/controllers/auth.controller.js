@@ -5,7 +5,7 @@ dotenv.config();
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 export const register = async (req, res) => {
@@ -21,6 +21,7 @@ export const register = async (req, res) => {
   res.json(data);
 };
 
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -29,7 +30,10 @@ export const login = async (req, res) => {
     password,
   });
 
-  if (error) return res.status(400).json(error);
+  if (error) return res.status(400).json({ message: error.message });
 
-  res.json(data);
+  res.json({
+    token: data.session.access_token,
+    user: data.user,
+  });
 };

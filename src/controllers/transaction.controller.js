@@ -15,6 +15,8 @@ export const addTransaction = async (req, res) => {
         tags,
       },
     ]);
+    console.log("REQ.USER:", req.user);
+    console.log("USER ID:", req.user?.id);
 
   if (error) return res.status(400).json(error);
 
