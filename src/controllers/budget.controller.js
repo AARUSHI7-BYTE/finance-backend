@@ -13,7 +13,7 @@ export const createBudget = async (req, res) => {
         month,
         year,
       },
-    ]);
+    ]).select();
 
   if (error) return res.status(400).json(error);
 
@@ -23,10 +23,28 @@ export const createBudget = async (req, res) => {
 export const getBudgets = async (req, res) => {
   const { data, error } = await supabase
     .from("budgets")
-    .select("*")
+    .select(`
+      *,
+      categories (
+        name
+      )
+    `)
     .eq("user_id", req.user.id);
 
   if (error) return res.status(400).json(error);
 
   res.json(data);
+};
+export const deleteBudget = async (req, res) => {
+  const { id } = req.params;
+
+  const { error } = await supabase
+    .from("budgets")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", req.user.id);
+
+  if (error) return res.status(400).json(error);
+
+  res.json({ message: "Budget deleted" });
 };
