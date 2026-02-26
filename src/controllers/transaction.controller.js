@@ -26,14 +26,26 @@ export const addTransaction = async (req, res) => {
 export const getTransactions = async (req, res) => {
   const { data, error } = await supabase
     .from("transactions")
-    .select("*")
+    .select(`
+      *,
+      categories (
+        name
+      )
+    `)
     .eq("user_id", req.user.id)
     .order("created_at", { ascending: false });
 
   if (error) return res.status(400).json(error);
 
-  res.json(data);
+  // Flatten category name
+  const formatted = data.map((t) => ({
+    ...t,
+    category_name: t.categories?.name || "Other",
+  }));
+
+  res.json(formatted);
 };
+
 
 export const deleteTransaction = async (req, res) => {
   const { id } = req.params;
