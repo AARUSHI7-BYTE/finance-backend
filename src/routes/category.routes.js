@@ -1,4 +1,5 @@
 import express from "express";
+import { createDefaultCategories } from "../controllers/category.controller.js";
 import {
   getCategories,
   createCategory,
@@ -12,5 +13,7 @@ const router = express.Router();
 router.get("/", verifyUser, getCategories);
 router.post("/", verifyUser, createCategory);
 router.delete("/:id", verifyUser, deleteCategory);
+router.post("/default", verifyUser, createDefaultCategories);
+
 
 export default router;
