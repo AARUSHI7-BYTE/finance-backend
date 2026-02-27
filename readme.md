@@ -97,6 +97,8 @@ Goals
 
 ⸻
 
+DEPLOYED BACKEND LINK : https://finance-backend-2-2i68.onrender.com/
+
 🔒 Security
 	•	Row Level Security enabled
 	•	Users can access only their own data
